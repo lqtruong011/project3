@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  labels:
+    app: frontend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: truongle1111/udagram-frontend:v1
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 80
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        env:
+          - name: POSTGRES_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: env-config
+                key: POSTGRES_HOST
+          - name: POSTGRES_DB
+            valueFrom:
+              configMapKeyRef:
+                name: env-config
+                key: POSTGRES_DB
+          - name: AWS_BUCKET
+            valueFrom:
+              configMapKeyRef:
+                name: env-config
+                key: AWS_BUCKET
+          - name: AWS_REGION
+            valueFrom:
+              configMapKeyRef:
+                name: env-config
+                key: AWS_REGION
+          - name: AWS_PROFILE
+            valueFrom:
+              configMapKeyRef:
+                name: env-config
+                key: AWS_PROFILE
+          - name: JWT_SECRET
+            valueFrom:
+              configMapKeyRef:
+                name: env-config
+                key: JWT_SECRET
+          - name: URL
+            valueFrom:
+              configMapKeyRef:
+                name: env-config
+                key: URL
+      restartPolicy: Always
